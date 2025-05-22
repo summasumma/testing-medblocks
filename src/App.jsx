@@ -5,7 +5,6 @@ import { live } from "@electric-sql/pglite/live";
 import PatientRegistration from "./PatientRegistration";
 import PatientList from "./PatientList";
 import SqlQuery from "./SqlQuery";
-import "./App.css";
 
 function App() {
   const [pg, setPg] = useState(null);
@@ -16,28 +15,13 @@ function App() {
       try {
         const worker = new Worker(
           new URL("./pglite-worker.js", import.meta.url),
-          {
-            type: "module",
-          }
+          { type: "module" }
         );
         const pgInstance = await PGliteWorker.create(worker, {
           dataDir: "idb://patient-db",
-          extensions: {
-            live,
-          },
+          extensions: { live },
         });
-        await pgInstance.waitReady; // Ensure worker is fully initialized
-        console.log("PGliteWorker initialized:", pgInstance);
-        console.log("Live extension available:", !!pgInstance.live);
-        // Test live query in main thread
-        await pgInstance.live
-          .query("SELECT 1")
-          .then((result) => {
-            console.log("Main thread live query test result:", result);
-          })
-          .catch((err) => {
-            console.error("Main thread live query test failed:", err);
-          });
+        await pgInstance.waitReady;
         setPg(pgInstance);
       } catch (err) {
         console.error("Failed to initialize PGliteWorker:", err);
@@ -48,20 +32,44 @@ function App() {
   }, []);
 
   if (error) {
-    return <div>Error initializing database: {error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg">
+          Error initializing database: {error}
+        </div>
+      </div>
+    );
   }
 
   if (!pg) {
-    return <div>Loading database...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-gray-600">Loading database...</div>
+      </div>
+    );
   }
 
   return (
     <PGliteProvider db={pg}>
-      <div className="container">
-        <h1>Patient Registration App</h1>
-        <PatientRegistration />
-        <PatientList />
-        <SqlQuery />
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+            Healthcare Patient Management
+          </h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <PatientRegistration />
+            </div>
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <PatientList />
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <SqlQuery />
+          </div>
+        </div>
       </div>
     </PGliteProvider>
   );

@@ -13,7 +13,6 @@ function PatientList() {
         const result = await db.query(
           "SELECT * FROM patients ORDER BY id DESC"
         );
-        // Convert Date objects to strings
         const formattedRows = result.rows.map((row) => ({
           ...row,
           date_of_birth:
@@ -32,49 +31,67 @@ function PatientList() {
     };
 
     fetchPatients();
-    const interval = setInterval(fetchPatients, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
+    const interval = setInterval(fetchPatients, 5000);
+    return () => clearInterval(interval);
   }, [db]);
 
   if (loading) {
-    return <div>Loading database...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error fetching patients: {error.message}</div>;
+    return (
+      <div className="bg-red-50 text-red-700 p-4 rounded-lg">
+        Error fetching patients: {error.message}
+      </div>
+    );
   }
 
   if (!rows || rows.length === 0) {
-    return <div>No patients found.</div>;
+    return (
+      <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-medium text-gray-900">No patients yet</h3>
+        <p className="mt-2 text-sm text-gray-500">
+          Register a new patient to see them listed here.
+        </p>
+      </div>
+    );
   }
 
   return (
     <div>
-      <h2>Patient List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Date of Birth</th>
-            <th>Gender</th>
-            <th>Address</th>
-            <th>Phone</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.id}</td>
-              <td>{patient.name}</td>
-              <td>{patient.date_of_birth}</td>
-              <td>{patient.gender}</td>
-              <td>{patient.address}</td>
-              <td>{patient.phone}</td>
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">Patient Records</h2>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {rows.map((patient) => (
+              <tr key={patient.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{patient.name}</div>
+                  <div className="text-sm text-gray-500">{patient.address}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.date_of_birth}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.gender}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{patient.phone}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
