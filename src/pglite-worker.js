@@ -15,7 +15,8 @@ worker({
     try {
       await db.waitReady;
       await db.exec(`
-        CREATE TABLE IF NOT EXISTS patients (
+        DROP TABLE IF EXISTS patients;
+        CREATE TABLE patients (
           id SERIAL PRIMARY KEY,
           first_name TEXT NOT NULL,
           last_name TEXT NOT NULL,
