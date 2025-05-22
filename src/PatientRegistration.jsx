@@ -19,11 +19,12 @@ function PatientRegistration() {
     pre_existing_conditions: "",
     emergency_contact_name: "",
     emergency_contact_phone: "",
+    registered_by: "medblocks",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -34,9 +35,9 @@ function PatientRegistration() {
           first_name, last_name, date_of_birth, gender, phone, email,
           street_address, city, state, postal_code, medical_record_number,
           allergies, pre_existing_conditions, emergency_contact_name,
-          emergency_contact_phone
+          emergency_contact_phone, registered_by
         ) VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
         )`,
         [
           formData.first_name,
@@ -54,14 +55,16 @@ function PatientRegistration() {
           formData.pre_existing_conditions,
           formData.emergency_contact_name,
           formData.emergency_contact_phone,
+          formData.registered_by,
         ]
       );
-      
-      const notification = document.createElement('div');
-      notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
-      notification.textContent = 'Patient registered successfully';
+
+      const notification = document.createElement("div");
+      notification.className =
+        "fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg";
+      notification.textContent = "Patient registered successfully";
       document.body.appendChild(notification);
-      
+
       setTimeout(() => {
         notification.remove();
       }, 3000);
@@ -82,6 +85,7 @@ function PatientRegistration() {
         pre_existing_conditions: "",
         emergency_contact_name: "",
         emergency_contact_phone: "",
+        registered_by: "medblocks",
       });
     } catch (error) {
       console.error("Error registering patient:", error);
@@ -91,10 +95,14 @@ function PatientRegistration() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">Register New Patient</h2>
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">
+        Register New Patient
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            Personal Information
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -160,7 +168,9 @@ function PatientRegistration() {
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            Contact Information
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -191,7 +201,9 @@ function PatientRegistration() {
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Address Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            Address Information
+          </h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -251,7 +263,9 @@ function PatientRegistration() {
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Medical Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            Medical Information
+          </h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -296,7 +310,9 @@ function PatientRegistration() {
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Emergency Contact</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            Emergency Contact
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
