@@ -13,19 +13,30 @@ worker({
     });
     console.log("PGlite instance created, live extension:", !!db.live);
     try {
-      await db.waitReady; // Ensure database is fully initialized
+      await db.waitReady;
       await db.exec(`
         CREATE TABLE IF NOT EXISTS patients (
           id SERIAL PRIMARY KEY,
-          name TEXT,
-          date_of_birth DATE,
-          gender TEXT,
-          address TEXT,
-          phone TEXT
+          first_name TEXT NOT NULL,
+          last_name TEXT NOT NULL,
+          date_of_birth DATE NOT NULL,
+          gender TEXT NOT NULL,
+          phone TEXT NOT NULL,
+          email TEXT,
+          street_address TEXT NOT NULL,
+          city TEXT NOT NULL,
+          state TEXT NOT NULL,
+          postal_code TEXT NOT NULL,
+          medical_record_number TEXT UNIQUE NOT NULL,
+          allergies TEXT,
+          pre_existing_conditions TEXT,
+          emergency_contact_name TEXT NOT NULL,
+          emergency_contact_phone TEXT NOT NULL,
+          registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          registered_by TEXT
         );
       `);
       console.log("Patients table created successfully");
-      // Verify live query capability
       await db.live
         .query("SELECT 1")
         .then((result) => {
