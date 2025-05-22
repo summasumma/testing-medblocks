@@ -46,7 +46,11 @@ function SqlQuery() {
           />
         </div>
         
-        <button onClick={handleExecute} className="btn-primary">
+        <button 
+          onClick={handleExecute} 
+          className="btn-primary"
+          disabled={!sql.trim()}
+        >
           Execute Query
         </button>
 
@@ -60,9 +64,15 @@ function SqlQuery() {
         {result && (
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
             <p className="text-sm font-medium text-gray-900 mb-2">Result</p>
-            <pre className="text-sm text-gray-700 overflow-x-auto">
-              {JSON.stringify(result, null, 2)}
-            </pre>
+            {result.rows && result.rows.length > 0 ? (
+              <pre className="text-sm text-gray-700 overflow-x-auto">
+                {JSON.stringify(result, null, 2)}
+              </pre>
+            ) : (
+              <div className="text-sm text-gray-600 italic">
+                No results found for this query
+              </div>
+            )}
           </div>
         )}
       </div>
