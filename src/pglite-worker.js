@@ -34,6 +34,7 @@ worker({
           emergency_contact_name TEXT NOT NULL,
           emergency_contact_phone TEXT NOT NULL,
           registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          registered_by TEXT NOT NULL
         );
       `);
       console.log("Patients table created successfully");
